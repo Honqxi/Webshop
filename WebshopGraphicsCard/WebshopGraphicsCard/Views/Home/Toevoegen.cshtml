@@ -11,7 +11,7 @@
     <title>Toevoegen</title>
 </head>
 <body class="m-3">
-    <form asp-action="Index" asp-controller="Home">
+    <form asp-action="Toevoegen" asp-controller="Home">
         <h2>ONLINE VIDEOKAARTEN - Item toevoegen aan winkelmandje</h2>
         <table class="table">
             <tr>
@@ -40,8 +40,9 @@
 
         <p>
             Product toevoegen aan het winkelmandje: 
-            <input type="text" value="Aantal" asp-for="Aantal" />
+            <input type="text" asp-for="Aantal" />
             <input type="submit" value="Voeg toe aan het mandje..." />
+            <span asp-validation-for="Aantal" class="Fout"></span>
         </p>
         <p><a asp-action="Index">Terug naar de catalogus</a></p>
     </form>

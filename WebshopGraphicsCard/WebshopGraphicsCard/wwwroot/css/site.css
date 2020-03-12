@@ -5,3 +5,8 @@
 .Centreer{
     text-align:center;
 }
+
+.Fout{
+    font-weight:bold;
+    color:red;
+}
