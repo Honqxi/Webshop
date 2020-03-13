@@ -39,26 +39,28 @@ namespace WebshopGraphicsCard.Controllers
         [HttpPost]
         public IActionResult Toevoegen(VMToevoegen vMToevoegen)
         {
+            Artikel art = new Artikel();
+            vMToevoegen.artikel = PC.loadArtikel(Convert.ToInt32(HttpContext.Session.GetString("ArtNr")));
             Winkelmand winkelmand = new Winkelmand();
-            vMToevoegen.artikel = PC.loadArtikel(vMToevoegen.artikel.ArtNr);
-            winkelmand.KlantNr = Convert.ToInt32(HttpContext.Session.GetString("KlantNr"));
-            winkelmand.Aantal = vMToevoegen.Aantal;
-            winkelmand.ArtNr = Convert.ToInt32(HttpContext.Session.GetString("ArtNr"));
-
             if (ModelState.IsValid)
-            {
-                if ((winkelmand.Aantal > 0) && (winkelmand.Aantal <= vMToevoegen.artikel.Voorraad))
+            {                  
+                if ((vMToevoegen.Aantal > 0) && (vMToevoegen.Aantal <= vMToevoegen.artikel.Voorraad ))
                 {
+                    winkelmand.KlantNr = Convert.ToInt32(HttpContext.Session.GetString("KlantNr"));
+                    winkelmand.Aantal = vMToevoegen.Aantal;
+                    winkelmand.ArtNr = Convert.ToInt32(HttpContext.Session.GetString("ArtNr"));
                     PC.PasMandjeAan(winkelmand);
-                    return View(vMToevoegen);
+                    return RedirectToAction("Winkelmand");
                 }
                 else
                 {
+                    ViewBag.fout("Het aantal dat ingegeven is, is niet correct");
                     return View(vMToevoegen);
                 }
             }
             else
             {
+                
                 return View(vMToevoegen);
             }           
         }

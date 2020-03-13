@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebshopGraphicsCard.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace WebshopGraphicsCard.Persistence
 {
@@ -64,41 +65,45 @@ namespace WebshopGraphicsCard.Persistence
         {
             MySqlConnection conn = new MySqlConnection(ConnStr);
             conn.Open();
+
             //Hier controleer je of het artikel al in het winkel mandje zit
-            string qry1 = "Select * from tblwinkelmand where (Artnr = '" + winkelmand.ArtNr + "') and (KlantNr = 1)";                    
-            MySqlCommand cmd = new MySqlCommand(qry1, conn);
-            MySqlDataReader dtr = cmd.ExecuteReader();
+            string qry1 = "Select * from tblwinkelmand where (Artnr = '" + winkelmand.ArtNr + "') and (KlantNr = " + winkelmand.KlantNr + ")";                   
+            MySqlCommand cmd1 = new MySqlCommand(qry1, conn);
+            MySqlDataReader dtr1 = cmd1.ExecuteReader();
+            
 
             //zoja, dan update je het aantal
-            if (dtr.HasRows)
+            if (dtr1.HasRows)
             {
+                conn.Close();
                 MySqlConnection conn2 = new MySqlConnection(ConnStr);
-                conn.Open();
+                conn2.Open();
                 //Het huidige aantal in het winkelmandje aanpassen met de nieuwe hoeveelheid
-                string qry2 = "update tblwinkelmand set aantal = (aantal +" + winkelmand.Aantal + ")";
+                string qry2 = "update tblwinkelmand set aantal = (aantal +" + winkelmand.Aantal + ") where (Artnr = '" + winkelmand.ArtNr + "') and (KlantNr = '" + winkelmand.KlantNr + "')";
                 MySqlCommand cmd2 = new MySqlCommand(qry2, conn2);
                 cmd2.ExecuteNonQuery();
-                conn.Close();
+                conn2.Close();
                 
             }
             else // Zonee, dan insert je het artikel en het aantal
             {
                 MySqlConnection conn3 = new MySqlConnection(ConnStr);
-                conn.Open();
+                conn3.Open();
                 //Als het artikel niet in het winkelmandje zit dan voeg je het eraan toe 
-                string qry3 = "INSERT INTO `tblwinkelmand` (`KlantNr`, `ArtNr`, `Aantal`) VALUES ('1', '" + winkelmand.ArtNr + "', '" + winkelmand.Aantal + "');";
+                string qry3 = "INSERT INTO `tblwinkelmand` (`KlantNr`, `ArtNr`, `Aantal`) VALUES ('"+ winkelmand.KlantNr+"', '" + winkelmand.ArtNr + "', '" + winkelmand.Aantal + "');";
                 MySqlCommand cmd3 = new MySqlCommand(qry3, conn3);
-                cmd3.ExecuteNonQuery();
-                conn.Close();
+                 cmd3.ExecuteNonQuery();
+                conn3.Close();
             }
 
             //Huidige voorraad aanpassen (Aantal dat naar het winkelmandje gaat aftrekken van de huidige voorraad)
             MySqlConnection conn4 = new MySqlConnection(ConnStr);
-            conn.Open();
-            string qry4 = "update tblartikel set voorraad = voorraad - '"+ winkelmand.Aantal + "'";
+            conn4.Open();
+            string qry4 = "update tblartikel set voorraad = voorraad - '" + winkelmand.Aantal + "' where (Artnr = '" + winkelmand.ArtNr + "')";
+
             MySqlCommand cmd4 = new MySqlCommand(qry4, conn4);
             cmd4.ExecuteNonQuery();
-            conn.Close();
+            conn4.Close();
         } 
     }
 }
