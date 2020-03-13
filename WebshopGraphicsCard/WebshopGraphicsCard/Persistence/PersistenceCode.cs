@@ -63,19 +63,19 @@ namespace WebshopGraphicsCard.Persistence
 
         public void PasMandjeAan(Winkelmand winkelmand)
         {
-            MySqlConnection conn = new MySqlConnection(ConnStr);
-            conn.Open();
+            MySqlConnection conn1 = new MySqlConnection(ConnStr);
+            conn1.Open();
 
             //Hier controleer je of het artikel al in het winkel mandje zit
             string qry1 = "Select * from tblwinkelmand where (Artnr = '" + winkelmand.ArtNr + "') and (KlantNr = " + winkelmand.KlantNr + ")";                   
-            MySqlCommand cmd1 = new MySqlCommand(qry1, conn);
+            MySqlCommand cmd1 = new MySqlCommand(qry1, conn1);
             MySqlDataReader dtr1 = cmd1.ExecuteReader();
             
 
             //zoja, dan update je het aantal
             if (dtr1.HasRows)
             {
-                conn.Close();
+                conn1.Close();
                 MySqlConnection conn2 = new MySqlConnection(ConnStr);
                 conn2.Open();
                 //Het huidige aantal in het winkelmandje aanpassen met de nieuwe hoeveelheid
@@ -100,7 +100,6 @@ namespace WebshopGraphicsCard.Persistence
             MySqlConnection conn4 = new MySqlConnection(ConnStr);
             conn4.Open();
             string qry4 = "update tblartikel set voorraad = voorraad - '" + winkelmand.Aantal + "' where (Artnr = '" + winkelmand.ArtNr + "')";
-
             MySqlCommand cmd4 = new MySqlCommand(qry4, conn4);
             cmd4.ExecuteNonQuery();
             conn4.Close();

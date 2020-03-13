@@ -1,0 +1,66 @@
+﻿@model  WebshopGraphicsCard.Models.VMWinkelmand;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <title>Winkelmandje</title>
+</head>
+<body class="m-3">
+           <h2 class="Centreer"> ONLINE VIDEOKAARTEN - Winkelmandje</h2>
+           <p class="Centreer">-------------</p>
+           <table class="table">
+               <tr>
+                   <td>Klantnumer: </td>
+                   <td>@Model.klant.KlantNr</td>
+               </tr>
+               <tr>
+                   <td>Naam:</td>
+                   <td>@Model.klant.Voornaam @Model.klant.Naam </td>
+               </tr>
+               <tr>
+                   <td>Adres:</td>
+                   <td>@Model.klant.Adres</td>
+               </tr>
+               <tr>
+                   <td></td>
+                   <td>@Model.klant.Gemeente</td>
+               </tr>
+               <tr>
+                   <td></td>
+                   <td></td>
+               </tr>
+               <tr>
+                   <td>Besteldatum:</td>
+                   <td>@DateTime.Now</td>
+               </tr>
+           </table>
+
+           <table>
+               <tr>
+                   <td></td>
+                   <td>Foto</td>
+                   <td>ArtNr</td>
+                   <td>Naam</td>
+                   <td>Aantal</td>
+                   <td>Prijs</td>
+                   <td>Totaal</td>
+               </tr>
+
+               @foreach (var item in Model.WinkelmandRepo.WinkelmandItems)
+               {
+           <tr>
+               <td></td>
+               <td><img class="OpmaakFoto" src="@Url.Content("~/images/" + item.Foto)"></td>
+               <td>@item.ArtNr</td>
+               <td>@item.Naam</td>
+               <td>@item.Aantal</td>
+               <td>@item.Prijs</td>
+               <td></td>
+           </tr>
+           </table>
+</body>
+</html>
